@@ -2,33 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Service\StudentService;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
-class StudentController
+class StudentController extends Controller
 {
-    public function __construct(
-        private StudentService $student
-    ) {}
-
-    public function show()
+    public function index()
     {
-        return $this->student->get();
+        return Student::all();
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
-        $student_data = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string',
-            'age' => 'required',
+        $student = Student::create($request->all());
+
+        return response()->json($student, 201);
+    }
+
+    public function show($id)
+    {
+        return Student::findOrFail($id);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $student = Student::findOrFail($id);
+        $student->update($request->all());
+
+        return response()->json($student);
+    }
+
+    public function destroy($id)
+    {
+        Student::destroy($id);
+
+        return response()->json([
+            'message' => 'Student deleted'
         ]);
-
-        return $this->student->create($student_data);
-    }
-
-    public function delete($id)
-    {
-        return $this->student->delete($id);
     }
 }
