@@ -31,6 +31,4 @@ class StudentController
     {
         return $this->student->delete($id);
     }
-
-    // update feature to be implemented
 }
